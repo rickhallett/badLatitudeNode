@@ -1,3 +1,5 @@
+const fs = require('fs');
+const cluster = require('cluster');
 const xlsx = require('xlsx');
 const chalk = require('chalk');
 const keys = require('./keys');
@@ -36,7 +38,7 @@ function processRawJSON(data){
 }
 
 async function fetchOne(address){
-    async_log('Fetch address from Google API')
+    async_log('Fetch address from Google API');
     const res = await googleMapsClient.geocode({ address: address }).asPromise();
 
     if(!res) {
@@ -51,9 +53,6 @@ async function fetchAll(array) {
     for(const address of array) {
         coords.push(processRawJSON(await fetchOne(address)));
     }
-
-    // remove first element (column title)
-    coords.splice(0, 1);
 
     // print table to console for reference
     console.table(coords);
@@ -76,6 +75,9 @@ function getAddresses(worksheet) {
     let end_of_column = false;
     let column = config.READ_ADDRESS_COLUMN;
     let row = config.READ_ADDRESS_ROW_START;
+    // remove first element (column title)
+    delete worksheet[`${column}${row}`];
+    row++;
     let addresses = [];
     while(!end_of_column) {
         const cell = `${column}${row}`;
@@ -118,14 +120,72 @@ function writeToNewFile(worksheet, workbook) {
 }
 
 
-const workbook = getWorkbook(config.FILENAME);
-const worksheet = getWorksheet(config.FILENAME);
+
+// Main
+
+// if(cluster.isMaster) {
+
+    // Use multi-threading for potential speed improvements
+    // cluster.fork();
+    // cluster.fork();
+    // cluster.fork();
+    // cluster.fork();
+
+// } else {
+
+async function test1() {
+    const res = await googleMapsClient.geocode({ address: '16 streche road swanage dorset' }).asPromise();
+    console.log(res)
+}
+
+test1();
+
+process.exit(0)
 
 
-fetchAll(getAddresses(worksheet)).then(coords => {
-    // console.table(res);
-    mergeResults(coords, worksheet);
-    writeToNewFile(worksheet, workbook);
-    log('Script complete.')
-});
+    fs.readdir(__dirname, function(err, items) {
+
+        const excelSheets = [];
+        const isExcelSheet = (filename) => filename.match(/(\w)+(.xlsx)/);
+        const isNotProcessed = (filename) => !filename.match(/(processed-)/);
+
+        items.forEach(filename => {
+            if(isExcelSheet(filename) && isNotProcessed(filename)){
+                excelSheets.push(filename);
+            }
+        });
+
+        while(excelSheets.length > 0) {
+            const nextSheet = excelSheets.pop();
+
+            fetchAll(getAddresses(getWorksheet(nextSheet))).then(coords => {
+                mergeResults(coords, worksheet);
+                writeToNewFile(worksheet, workbook);
+            });
+        }
+
+        log('Script complete.');
+        process.exit(0);
+
+    });
+
+
+    console.time('Process');
+
+    const workbook = getWorkbook(config.FILENAME);
+    const worksheet = getWorksheet(config.FILENAME);
+
+    fetchAll(getAddresses(worksheet)).then(coords => {
+        mergeResults(coords, worksheet);
+        writeToNewFile(worksheet, workbook);
+
+        console.timeEnd('Process');
+
+        log('Script complete.');
+
+        process.exit(0);
+    });
+// }
+
+
 
