@@ -2,9 +2,13 @@ const xlsx = require('xlsx');
 const chalk = require('chalk');
 const keys = require('./keys');
 
+// TODO: dynamically work out address/coord columns?
 const config = {
-    ADDRESS_COLUMN: 'A',
-    ADDRESS_ROW_START: 1,
+    READ_ADDRESS_COLUMN: 'A',
+    READ_ADDRESS_ROW_START: 1,
+    WRITE_ADDRESS_COLUMN_LATITUDE: 'B',
+    WRITE_ADDRESS_COLUMN_LONGITUDE: 'C',
+    WRITE_ADDRESS_ROW_START: 1,
     FILENAME: 'excel_example.xlsx'
 };
 
@@ -22,7 +26,7 @@ function processRawJSON(data){
         lat: lat,
         lng: lng
     }
-};
+}
 
 async function fetchOne(address){
     const res = await googleMapsClient.geocode({ address: address }).asPromise();
@@ -40,21 +44,29 @@ async function fetchAll(array) {
         coords.push(processRawJSON(await fetchOne(address)));
     }
 
+    // remove first element (column title)
+    coords.splice(0, 1);
+
     return coords;
 }
 
-function getWorksheet(filename){
+function getWorkbook(filename) {
+    return xlsx.readFile(filename);
+}
+
+function getWorksheet(filename) {
     const file = xlsx.readFile(filename);
     const firstSheetName = file.SheetNames[0];
     return file.Sheets[firstSheetName];
-};
+}
 
-function getAddresses(worksheet){
+function getAddresses(worksheet) {
     let end_of_column = false;
-    let row = config.ADDRESS_ROW_START;
+    let column = config.READ_ADDRESS_COLUMN;
+    let row = config.READ_ADDRESS_ROW_START;
     let addresses = [];
     while(!end_of_column) {
-        const cell = `${config.ADDRESS_COLUMN}${row}`;
+        const cell = `${column}${row}`;
         if(worksheet[cell]) {
             addresses.push(worksheet[cell].h);
             row++;
@@ -63,12 +75,42 @@ function getAddresses(worksheet){
         }
     }
     return addresses;
-};
+}
+
+function mergeResults(results, worksheet) {
+    let lat_column = config.WRITE_ADDRESS_COLUMN_LATITUDE;
+    let long_column = config.WRITE_ADDRESS_COLUMN_LONGITUDE;
+    let row = config.WRITE_ADDRESS_ROW_START;
+
+    worksheet[`${lat_column}${row}`] = { v: 'Latitude' };
+    worksheet[`${long_column}${row}`] = { v: 'Longitude' };
+    row++;
+
+    results.forEach((el) => {
+        worksheet[`${lat_column}${row}`] = { v: el.lat };
+        worksheet[`${long_column}${row}`] = { v: el.lng };
+        row++;
+    });
+
+    config.areaRef = `A1:${long_column}${row - 1}`
+}
+
+function writeToNewFile(worksheet, workbook) {
+    worksheet['!ref'] = config.areaRef;
+    worksheet['!cols'] = [{ wpx: 150 }, { wpx: 95 }, { wpx: 95 }];
+    let newWorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(newWorkBook, worksheet, 'Processed Sheet1');
+    xlsx.writeFile(newWorkBook, `processed-${config.FILENAME}`);
+}
 
 
-fetchAll(
-    getAddresses(
-        getWorksheet(config.FILENAME)
-    )
-).then(res => console.table(res));
+const workbook = getWorkbook(config.FILENAME);
+const worksheet = getWorksheet(config.FILENAME);
+
+
+fetchAll(getAddresses(worksheet)).then(coords => {
+    // console.table(res);
+    mergeResults(coords, worksheet);
+    writeToNewFile(worksheet, workbook);
+});
 
