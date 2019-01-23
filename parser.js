@@ -133,15 +133,6 @@ function writeToNewFile(worksheet, workbook) {
 
 // } else {
 
-async function test1() {
-    const res = await googleMapsClient.geocode({ address: '16 streche road swanage dorset' }).asPromise();
-    console.log(res)
-}
-
-test1();
-
-process.exit(0)
-
 
     fs.readdir(__dirname, function(err, items) {
 
@@ -155,7 +146,8 @@ process.exit(0)
             }
         });
 
-        while(excelSheets.length > 0) {
+        // TODO: make sure that successive calls to fetchAll is done asynchronously
+        while(excelSheets.length >= 0) {
             const nextSheet = excelSheets.pop();
 
             fetchAll(getAddresses(getWorksheet(nextSheet))).then(coords => {
