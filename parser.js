@@ -2,28 +2,6 @@ const xlsx = require('xlsx');
 const chalk = require('chalk');
 const keys = require('./keys');
 
-const config = {
-  ADDRESS_COLUMN: 'A',
-  ADDRESS_ROW_START: 1
-};
-
-const excel_example = xlsx.readFile('excel_example.xlsx');
-const firstSheetName = excel_example.SheetNames[0];
-const worksheet = excel_example.Sheets[firstSheetName];
-
-let end_of_column = false;
-let row = 1;
-let addresses = [];
-while(!end_of_column) {
-    const cell = `A${row}`;
-    if(worksheet[cell]) {
-        addresses.push(worksheet[cell].h);
-        row++;
-    } else {
-        end_of_column = true;
-    }
-}
-
 const googleMapsClient = require('@google/maps').createClient({
     key: keys.googlemaps,
     Promise: Promise
@@ -60,12 +38,41 @@ async function fetchAll(array) {
     return coords;
 }
 
-const home = '16 Streche road Swanage Dorset BH19 1NF';
-const work = 'Matrix House North Fourth Street Milton Keynes MK9 1AY';
-const dr = 'Swanage Medical Practice';
-const testAddrArray = [home, work, dr];
+const config = {
+    ADDRESS_COLUMN: 'A',
+    ADDRESS_ROW_START: 1
+};
 
-fetchAll(testAddrArray).then(res => console.table(res));
+
+const getWorksheet = (filename) => {
+    const file = xlsx.readFile(filename);
+    const firstSheetName = file.SheetNames[0];
+    return file.Sheets[firstSheetName];
+};
+
+const getAddresses = (worksheet) => {
+    let end_of_column = false;
+    let row = 1;
+    let addresses = [];
+    while(!end_of_column) {
+        const cell = `A${row}`;
+        if(worksheet[cell]) {
+            addresses.push(worksheet[cell].h);
+            row++;
+        } else {
+            end_of_column = true;
+        }
+    }
+    return addresses;
+};
+
+
+
+
+fetchAll(
+    getAddresses(
+        getWorksheet('excel_example.xlsx')
+    )).then(res => console.table(res));
 
 
 const breakpoint = 'this is a breakpoint.';
