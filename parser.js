@@ -2,12 +2,18 @@ const xlsx = require('xlsx');
 const chalk = require('chalk');
 const keys = require('./keys');
 
+const config = {
+    ADDRESS_COLUMN: 'A',
+    ADDRESS_ROW_START: 1,
+    FILENAME: 'excel_example.xlsx'
+};
+
 const googleMapsClient = require('@google/maps').createClient({
     key: keys.googlemaps,
     Promise: Promise
 });
 
-const processRawJSON = (data) => {
+function processRawJSON(data){
     const { formatted_address: addr } = data;
     const { lat, lng } = data.geometry.location;
 
@@ -28,7 +34,6 @@ async function fetchOne(address){
     }
 }
 
-
 async function fetchAll(array) {
     let coords = [];
     for(const address of array) {
@@ -38,24 +43,18 @@ async function fetchAll(array) {
     return coords;
 }
 
-const config = {
-    ADDRESS_COLUMN: 'A',
-    ADDRESS_ROW_START: 1
-};
-
-
-const getWorksheet = (filename) => {
+function getWorksheet(filename){
     const file = xlsx.readFile(filename);
     const firstSheetName = file.SheetNames[0];
     return file.Sheets[firstSheetName];
 };
 
-const getAddresses = (worksheet) => {
+function getAddresses(worksheet){
     let end_of_column = false;
-    let row = 1;
+    let row = config.ADDRESS_ROW_START;
     let addresses = [];
     while(!end_of_column) {
-        const cell = `A${row}`;
+        const cell = `${config.ADDRESS_COLUMN}${row}`;
         if(worksheet[cell]) {
             addresses.push(worksheet[cell].h);
             row++;
@@ -67,12 +66,9 @@ const getAddresses = (worksheet) => {
 };
 
 
-
-
 fetchAll(
     getAddresses(
-        getWorksheet('excel_example.xlsx')
-    )).then(res => console.table(res));
+        getWorksheet(config.FILENAME)
+    )
+).then(res => console.table(res));
 
-
-const breakpoint = 'this is a breakpoint.';
