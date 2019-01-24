@@ -1,5 +1,6 @@
 const fs = require('fs');
 const cluster = require('cluster');
+const { promisify } = require('util');
 const xlsx = require('xlsx');
 const chalk = require('chalk');
 const keys = require('./keys');
@@ -110,13 +111,13 @@ function mergeResults(results, worksheet) {
     config.areaRef = `A1:${long_column}${row - 1}`
 }
 
-function writeToNewFile(worksheet, workbook) {
-    log(`Writing to new file: processed-${config.FILENAME}`);
+function writeToNewFile(worksheet, nextSheetName) {
+    log(`Writing to new file: processed-${nextSheetName}`);
     worksheet['!ref'] = config.areaRef;
     worksheet['!cols'] = [{ wpx: 150 }, { wpx: 95 }, { wpx: 95 }];
     let newWorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(newWorkBook, worksheet, 'Processed Sheet1');
-    xlsx.writeFile(newWorkBook, `processed-${config.FILENAME}`);
+    xlsx.writeFile(newWorkBook, `processed-${nextSheetName}`);
 }
 
 
@@ -134,49 +135,40 @@ function writeToNewFile(worksheet, workbook) {
 // } else {
 
 
-    fs.readdir(__dirname, function(err, items) {
+    fs.readdir(__dirname, function (err, items) {
 
         const excelSheets = [];
         const isExcelSheet = (filename) => filename.match(/(\w)+(.xlsx)/);
         const isNotProcessed = (filename) => !filename.match(/(processed-)/);
 
         items.forEach(filename => {
-            if(isExcelSheet(filename) && isNotProcessed(filename)){
+            if (isExcelSheet(filename) && isNotProcessed(filename)) {
                 excelSheets.push(filename);
             }
         });
 
-        // TODO: make sure that successive calls to fetchAll is done asynchronously
-        while(excelSheets.length >= 0) {
-            const nextSheet = excelSheets.pop();
+        async function asyncRecurse(nextSheet) {
+            if (!nextSheet) {
+                return false;
+            } else {
+                const worksheet = getWorksheet(nextSheet);
+                fetchAll(getAddresses(worksheet)).then(coords => {
+                    mergeResults(coords, worksheet);
+                    writeToNewFile(worksheet, nextSheet);
 
-            fetchAll(getAddresses(getWorksheet(nextSheet))).then(coords => {
-                mergeResults(coords, worksheet);
-                writeToNewFile(worksheet, workbook);
-            });
+                    return asyncRecurse(excelSheets.pop());
+                }).catch(err => {
+                    console.log(err.message);
+                });
+            }
+
         }
 
-        log('Script complete.');
-        process.exit(0);
+        asyncRecurse(excelSheets.pop());
 
     });
 
 
-    console.time('Process');
-
-    const workbook = getWorkbook(config.FILENAME);
-    const worksheet = getWorksheet(config.FILENAME);
-
-    fetchAll(getAddresses(worksheet)).then(coords => {
-        mergeResults(coords, worksheet);
-        writeToNewFile(worksheet, workbook);
-
-        console.timeEnd('Process');
-
-        log('Script complete.');
-
-        process.exit(0);
-    });
 // }
 
 
