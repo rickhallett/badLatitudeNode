@@ -2,8 +2,10 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const createDebug = require('debug');
+const chalk = require('chalk');
+const server_log = require('debug')('server: server');
+server_log.enabled = true;
+const { fileParser } = require('./lib/parser');
 
 
 const indexRouter = require('./routes/index');
@@ -15,7 +17,6 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -42,6 +43,8 @@ app.use(function(err, req, res, next) {
 
 app.listen(3000, (err) => {
     if(!err) {
-        console.log('Server listening on PORT 3000')
+        server_log(chalk.cyan('Server listening on PORT 3000\n'));
     }
+
+    fileParser(() => process.exit(0));
 });

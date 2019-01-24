@@ -1,4 +1,4 @@
 .idea
 node_modules
 badLatitudeNode.iml
-keys.js
+/config/keys.js
