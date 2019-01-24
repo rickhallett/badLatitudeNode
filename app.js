@@ -3,12 +3,12 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const chalk = require('chalk');
+const yargs = require('yargs');
 const server_log = require('debug')('server: server');
 server_log.enabled = true;
 const { fileParser } = require('./lib/parser');
 
-const file = 'GE Store List244.xlsx';
-
+let file = yargs.argv.filename || null;
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
