@@ -7,6 +7,8 @@ const server_log = require('debug')('server: server');
 server_log.enabled = true;
 const { fileParser } = require('./lib/parser');
 
+const file = 'GE Store List244.xlsx';
+
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -41,10 +43,12 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+
 app.listen(3000, (err) => {
     if(!err) {
         server_log(chalk.cyan('Server listening on PORT 3000\n'));
     }
 
-    fileParser((term) => term ? process.exit(0) : null);
+    fileParser(file, (term) => term ? process.exit(0) : console.log(chalk.cyan('\nParsing complete. Server still running.')));
 });
