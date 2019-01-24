@@ -46,5 +46,5 @@ app.listen(3000, (err) => {
         server_log(chalk.cyan('Server listening on PORT 3000\n'));
     }
 
-    fileParser(() => process.exit(0));
+    fileParser((term) => term ? process.exit(0) : null);
 });
