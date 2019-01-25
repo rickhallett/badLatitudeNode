@@ -1,24 +1,6 @@
 {
   "queries": [
     {
-      "query": "cellData",
-      "nullError": true,
-      "addr": "res.addr",
-      "lat": "res.lat",
-      "lng": "res.lng"
-    },
-    {
-      "query": "cellData",
-      "nullError": false,
-      "formatted_address": "res.formatted_address",
-      "geometry": {
-        "location": {
-          "lat": "res.geometry.location.lat",
-          "lng": "res.geometry.location.lng"
-        }
-      }
-    },
-    {
       "query": null,
       "nullError": true,
       "addr": null,
