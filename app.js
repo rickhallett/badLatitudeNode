@@ -43,20 +43,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-function incrementPort() {
-    let port = 3000;
-    return function(num = null){
-        if(!num) {
-            return port;
-        }
-        return port += num;
-    }
-}
-
-const incPort = incrementPort();
 
 function initialiseServer(port) {
-
     app.listen(port, (err) => {
         if(!err) {
             server_log(chalk.cyan(`Server listening on port ${port}\n`));
@@ -68,18 +56,8 @@ function initialiseServer(port) {
 
         fileParser(file, (term) => term ? process.exit(0) : console.log(chalk.cyan('\nParsing complete. Server still running.')));
     });
-
 }
 
-process.on('uncaughtException', (err) => {
-   if(err.errno === 'EADDRINUSE') {
-       console.log(chalk.red(`Port ${incPort()} already in use. Re-attempting on port ${incPort() + 1}`));
-       return initialiseServer(incPort(1));
-   } else {
-       console.log(err);
-       process.exit(1);
-   }
-});
 
 
 initialiseServer(3000);
