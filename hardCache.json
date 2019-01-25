@@ -1,0 +1,278 @@
+{
+  "queries": [
+    {
+      "query": "cellData",
+      "nullError": true,
+      "addr": "res.addr",
+      "lat": "res.lat",
+      "lng": "res.lng"
+    },
+    {
+      "query": "cellData",
+      "nullError": false,
+      "formatted_address": "res.formatted_address",
+      "geometry": {
+        "location": {
+          "lat": "res.geometry.location.lat",
+          "lng": "res.geometry.location.lng"
+        }
+      }
+    },
+    {
+      "query": null,
+      "nullError": true,
+      "addr": null,
+      "lat": "Invalid request. Missing the 'address', 'components', 'latlng' or 'place_id' parameter.",
+      "lng": ""
+    },
+    {
+      "query": "Chicago",
+      "nullError": true,
+      "addr": "Chicago",
+      "lat": "APPROXIMATE",
+      "lng": "Please check address accuracy"
+    },
+    {
+      "query": "34310 Aurora Rd, Solon, OH-44139",
+      "nullError": false,
+      "formatted_address": "34310 Aurora Rd, Solon, OH 44139, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.3819211,
+          "lng": -81.4366541
+        }
+      }
+    },
+    {
+      "query": "3440 Center Road, Brunswick, OH-44212",
+      "nullError": false,
+      "formatted_address": "3440 Center Rd, Brunswick, OH 44212, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.23696220000001,
+          "lng": -81.8099678
+        }
+      }
+    },
+    {
+      "query": "5231 Detroit Road, Sheffield Lake, OH-44054",
+      "nullError": false,
+      "formatted_address": "5231 Detroit Rd, Sheffield Lake, OH 44054, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.4277923,
+          "lng": -82.07935499999999
+        }
+      }
+    },
+    {
+      "query": "33501 Just Imagine Drive, Avon, OH-44011",
+      "nullError": false,
+      "formatted_address": "33501 Just Imagine Dr, Avon, OH 44011, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.46679820000001,
+          "lng": -81.9877133
+        }
+      }
+    },
+    {
+      "query": "7750 Reynolds Rd, Mentor, OH-44060",
+      "nullError": false,
+      "formatted_address": "7750 Reynolds Rd, Mentor, OH 44060, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.6600549,
+          "lng": -81.3783727
+        }
+      }
+    },
+    {
+      "query": "1700 Norton Road, Stow, OH-44224",
+      "nullError": false,
+      "formatted_address": "1700 Norton Rd, Stow, OH 44224, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.2020578,
+          "lng": -81.4339244
+        }
+      }
+    },
+    {
+      "query": "2687 State Road, Cuyahoga Falls, OH-44223",
+      "nullError": false,
+      "formatted_address": "2687 State Rd, Cuyahoga Falls, OH 44223, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.1466005,
+          "lng": -81.50684199999999
+        }
+      }
+    },
+    {
+      "query": "8202 East Market Street, Warren, OH-44484",
+      "nullError": false,
+      "formatted_address": "8202 E Market St, Warren, OH 44484, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.2371084,
+          "lng": -80.7435275
+        }
+      }
+    },
+    {
+      "query": "4343 Royalton Road,<br/>Broadview Heights, OH-44147",
+      "nullError": false,
+      "formatted_address": "4343 E Royalton Rd, Broadview Heights, OH 44147, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.31501859999999,
+          "lng": -81.6560655
+        }
+      }
+    },
+    {
+      "query": "6556 North Ridge Road, North Madison, OH-44057",
+      "nullError": false,
+      "formatted_address": "6556 N Ridge Rd, Madison, OH 44057, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.8014945,
+          "lng": -81.0559732
+        }
+      }
+    },
+    {
+      "query": "2032 Lincoln Way East, Massillon, OH-44646",
+      "nullError": false,
+      "formatted_address": "2032 Lincoln Way E, Massillon, OH 44646, USA",
+      "geometry": {
+        "location": {
+          "lat": 40.8011993,
+          "lng": -81.4953431
+        }
+      }
+    },
+    {
+      "query": "2067 Interchange Rd, Erie, PA-16509",
+      "nullError": false,
+      "formatted_address": "2067 Interchange Rd, Erie, PA 16509, USA",
+      "geometry": {
+        "location": {
+          "lat": 42.06302489999999,
+          "lng": -80.10185229999999
+        }
+      }
+    },
+    {
+      "query": "825 Ambassador Drive,<br/>Wadsworth, OH-44281",
+      "nullError": false,
+      "formatted_address": "825 Ambassador Dr, Wadsworth, OH 44281, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.04537639999999,
+          "lng": -81.6964167
+        }
+      }
+    },
+    {
+      "query": "14100 Detroit Ave., Lakewood, OH-44107",
+      "nullError": false,
+      "formatted_address": "14100 Detroit Ave, Lakewood, OH 44107, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.4864641,
+          "lng": -81.7912058
+        }
+      }
+    },
+    {
+      "query": "3750 W Market Street, Akron, OH-44333",
+      "nullError": false,
+      "formatted_address": "3750 W Market St, Fairlawn, OH 44333, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.1353696,
+          "lng": -81.6321492
+        }
+      }
+    },
+    {
+      "query": "230 Howe Avenue, Cuyahoga Falls, OH-44221",
+      "nullError": false,
+      "formatted_address": "230 Howe Ave, Akron, OH 44310, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.1173586,
+          "lng": -81.4833345
+        }
+      }
+    },
+    {
+      "query": "290 East Aurora Road<br/>Northfield, OH 44067",
+      "nullError": false,
+      "formatted_address": "290 E Aurora Rd, Northfield, OH 44067, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.3131984,
+          "lng": -81.5293148
+        }
+      }
+    },
+    {
+      "query": "909 E Main St<br/>Ravenna, Ohio 44266",
+      "nullError": false,
+      "formatted_address": "909 E Main St, Ravenna, OH 44266, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.1590451,
+          "lng": -81.22775999999999
+        }
+      }
+    },
+    {
+      "query": "36475 Euclid Avenue, Willoughby, OH-44094",
+      "nullError": false,
+      "formatted_address": "36475 Euclid Ave, Willoughby, OH 44094, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.6303768,
+          "lng": -81.4277482
+        }
+      }
+    },
+    {
+      "query": "7400 Broadview Road, Parma, OH-44134",
+      "nullError": false,
+      "formatted_address": "7400 Broadview Rd, Parma, OH 44134, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.36463800000001,
+          "lng": -81.6879051
+        }
+      }
+    },
+    {
+      "query": "25105 Cedar Road, Lyndhurst, OH-44124",
+      "nullError": false,
+      "formatted_address": "25105 Cedar Rd, Lyndhurst, OH 44124, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.503467,
+          "lng": -81.49945670000001
+        }
+      }
+    },
+    {
+      "query": "30320 Lakeshore Boulevard, Willowick, OH-44095",
+      "nullError": false,
+      "formatted_address": "30320 Lakeshore Blvd, Willowick, OH 44095, USA",
+      "geometry": {
+        "location": {
+          "lat": 41.636425,
+          "lng": -81.47538449999999
+        }
+      }
+    }
+  ]
+}

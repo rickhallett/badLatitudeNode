@@ -8,6 +8,7 @@ const config = {
     MEM_LEAK: 'Memory Leak?',
     CONTROL: 'Control',
     WRITE_ADDRESS_ROW_START: 1,
+    ROOT_DIR: '/Users/richardhallett/Code/badLatitudeNode',
     ADDRESS_FILE_DIRECTORY: `${__dirname}/address_files`,
     TERMINATE_AFTER_PARSE: true,
     COLUMN_TITLES: ['Central D', 'Store number','Brand','Store Name','Address', 'City', 'State', 'Street', 'Longitude', 'Latitude', 'Memory Leak?', 'Control']
